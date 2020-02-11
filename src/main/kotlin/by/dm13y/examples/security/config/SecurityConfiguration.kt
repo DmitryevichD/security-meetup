@@ -1,5 +1,6 @@
 package by.dm13y.examples.security.config
 
+import by.dm13y.examples.security.config.custom.UserCustomDetailServiceImpl
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -7,13 +8,15 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
 class SecurityConfiguration(
-    private val userProperties: UserProperties
+    private val userProperties: UserProperties,
+    private val userCustomDetailServiceImpl: UserDetailsService
 ) : WebSecurityConfigurerAdapter() {
     override fun configure(auth: AuthenticationManagerBuilder) {
 
@@ -24,12 +27,16 @@ class SecurityConfiguration(
                     .password(passwordEncoder()!!.encode(it.name))
                     .roles(it.role!!.name)
             }
+
+        auth.userDetailsService(userCustomDetailServiceImpl).passwordEncoder(passwordEncoder())
     }
 
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
             .antMatchers("/api/v1/public/**").permitAll() //ВАЖНО СОБЛЮДАТЬ ПОРЯДОК ОТ ЧАСТНОГО К ОБЩЕМУ
             .antMatchers("/api/**").authenticated()
+            .and()
+            .httpBasic()
             .and()
             .formLogin()
     }
