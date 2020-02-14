@@ -1,6 +1,5 @@
 package by.dm13y.examples.security.config
 
-import by.dm13y.examples.security.config.custom.UserCustomDetailServiceImpl
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -9,14 +8,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
 class SecurityConfiguration(
     private val userProperties: UserProperties,
-    private val userCustomDetailServiceImpl: UserDetailsService
+    private val userCustomDetailServiceImpl: UserDetailsService,
+    private val ldapUserMapper: LdapUserDetailsMapper
 ) : WebSecurityConfigurerAdapter() {
     override fun configure(auth: AuthenticationManagerBuilder) {
 
@@ -29,6 +31,19 @@ class SecurityConfiguration(
             }
 
         auth.userDetailsService(userCustomDetailServiceImpl).passwordEncoder(passwordEncoder())
+
+        //ldap attributes https://gerardnico.com/security/ldap/attribute
+        auth.ldapAuthentication()
+            .userDnPatterns("uid={0},ou=people")
+            .groupSearchBase("ou=groups")
+            .userDetailsContextMapper(ldapUserMapper)
+            .contextSource()
+            .url("ldap://localhost:8389/dc=springframework,dc=org")
+            .and()
+            .passwordCompare()
+            .passwordEncoder(BCryptPasswordEncoder())
+            .passwordAttribute("userPassword")
+
     }
 
     override fun configure(http: HttpSecurity) {

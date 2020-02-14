@@ -24,6 +24,11 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
+    implementation("org.springframework.ldap:spring-ldap-core")
+    implementation("org.springframework.security:spring-security-ldap")
+    implementation("com.unboundid:unboundid-ldapsdk")
+    implementation("org.springframework:spring-tx")
+
     kapt("org.springframework.boot:spring-boot-configuration-processor")
 
     testImplementation("org.springframework.security:spring-security-test")
