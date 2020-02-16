@@ -28,6 +28,10 @@ dependencies {
     implementation("org.springframework.security:spring-security-ldap")
     implementation("com.unboundid:unboundid-ldapsdk")
     implementation("org.springframework:spring-tx")
+    implementation("io.jsonwebtoken:jjwt:0.9.1")
+    implementation("org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.2.2.RELEASE")
+    implementation("org.springframework.security.oauth:spring-security-oauth2:2.2.2.RELEASE")
+
 
     kapt("org.springframework.boot:spring-boot-configuration-processor")
 

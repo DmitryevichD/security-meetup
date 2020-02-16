@@ -1,5 +1,6 @@
 package by.dm13y.examples.security.config
 
+import by.dm13y.examples.security.config.jwt.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity
@@ -18,7 +20,8 @@ import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper
 class SecurityConfiguration(
     private val userProperties: UserProperties,
     private val userCustomDetailServiceImpl: UserDetailsService,
-    private val ldapUserMapper: LdapUserDetailsMapper
+    private val ldapUserMapper: LdapUserDetailsMapper,
+    private val jwtAuthenticationFilter: JwtAuthenticationFilter
 ) : WebSecurityConfigurerAdapter() {
     override fun configure(auth: AuthenticationManagerBuilder) {
 
@@ -54,6 +57,10 @@ class SecurityConfiguration(
             .httpBasic()
             .and()
             .formLogin()
+            .and()
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+
+
     }
 
     @Bean

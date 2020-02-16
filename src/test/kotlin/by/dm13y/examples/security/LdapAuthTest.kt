@@ -19,7 +19,7 @@ class LdapAuthTest {
     lateinit var mockMvc: MockMvc
 
     @Test
-    fun loginWithValidUserThenAuthenticated() {
+    fun `LDAP authentication`() {
         val login: SecurityMockMvcRequestBuilders.FormLoginRequestBuilder = formLogin()
             .user("ben")
             .password("benspassword")
