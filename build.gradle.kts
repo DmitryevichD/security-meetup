@@ -31,6 +31,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     implementation("org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.2.2.RELEASE")
     implementation("org.springframework.security.oauth:spring-security-oauth2:2.2.2.RELEASE")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.2")
 
 
     kapt("org.springframework.boot:spring-boot-configuration-processor")

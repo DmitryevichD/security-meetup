@@ -3,6 +3,8 @@ package by.dm13y.examples.security.config
 import by.dm13y.examples.security.config.jwt.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -14,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
+@Profile(value = ["auth2-test", "basic-test"])
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
@@ -61,6 +64,11 @@ class SecurityConfiguration(
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
 
 
+    }
+
+    @Bean
+    override fun authenticationManager(): AuthenticationManager {
+        return super.authenticationManager()
     }
 
     @Bean
