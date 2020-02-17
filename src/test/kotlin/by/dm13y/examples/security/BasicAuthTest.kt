@@ -1,5 +1,6 @@
 package by.dm13y.examples.security
 
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.get
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension::class)
+@Disabled("Conflict with auth2 resource server test. For use this test commit ResourceServer")
 class BasicAuthTest {
     @Autowired
     lateinit var mockMvc: MockMvc
