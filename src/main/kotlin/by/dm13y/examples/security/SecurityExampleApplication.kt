@@ -1,4 +1,4 @@
-package by.dm13y.example.securityexample
+package by.dm13y.examples.security
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

@@ -1,1 +1,1 @@
-rootProject.name = "security-example"
+rootProject.name = "security-meetup"
