@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "security.users",
+      "type": "by.dm13y.examples.security.config.UserProperties",
+      "description": "Description for security.users."
+  }
+  ]
+}

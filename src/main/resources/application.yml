@@ -1,0 +1,8 @@
+security:
+  users:
+    - name: admin
+      password: admin
+      role: ADMIN
+    - name: user
+      password: user
+      role: USER
