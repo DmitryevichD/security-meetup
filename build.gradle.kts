@@ -1,14 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 
 plugins {
     id("org.springframework.boot") version "2.2.4.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
+    kotlin("kapt") version "1.3.61"
     kotlin("jvm") version "1.3.61"
     kotlin("plugin.spring") version "1.3.61"
 }
 
-group = "by.dm13y.example"
-version = "0.0.1"
+group = "by.dm13y.spring-security-meetup"
+version = "1.0.0"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
@@ -16,16 +18,28 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-ldap")
-    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+    implementation("org.springframework.ldap:spring-ldap-core")
+    implementation("org.springframework.security:spring-security-ldap")
+    implementation("com.unboundid:unboundid-ldapsdk")
+    implementation("org.springframework:spring-tx")
+    implementation("io.jsonwebtoken:jjwt:0.9.1")
+    implementation("org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.2.2.RELEASE")
+    implementation("org.springframework.security.oauth:spring-security-oauth2:2.2.2.RELEASE")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.2")
+
+
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
+
+    testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
-    testImplementation("org.springframework.security:spring-security-test")
 }
 
 tasks.withType<Test> {

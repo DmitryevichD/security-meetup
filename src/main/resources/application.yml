@@ -1,0 +1,15 @@
+spring:
+  ldap:
+    embedded:
+      ldif: classpath:ldap/embeded-ldap-server.ldif
+      base-dn: dc=springframework,dc=org
+      port: 8389
+
+security:
+  users:
+    - name: admin
+      password: admin
+      role: ADMIN
+    - name: user
+      password: user
+      role: USER
