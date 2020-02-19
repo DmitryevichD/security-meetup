@@ -1,6 +1,5 @@
 package by.dm13y.examples.security
 
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -9,13 +8,16 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin
 import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated
+import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 
+@ActiveProfiles("basic-test")
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension::class)
-@Disabled("Conflict with auth2 resource server test. For use this test commit ResourceServer")
+@DirtiesContext
 class LdapAuthTest {
     @Autowired
     lateinit var mockMvc: MockMvc

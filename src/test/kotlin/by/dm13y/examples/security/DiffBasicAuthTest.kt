@@ -12,13 +12,14 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import java.util.*
 
-@ActiveProfiles("basic-test")
+@ActiveProfiles("multiply-auth-point")
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension::class)
 @DirtiesContext()
-class BasicAuthTest {
+class DiffBasicAuthTest {
     @Autowired
     lateinit var mockMvc: MockMvc
 
@@ -29,34 +30,51 @@ class BasicAuthTest {
         }.andExpect { status { isOk } }
     }
 
+
     @Test
-    fun `access to common private controller without authorization`() {
+    fun `access to inMemory config without basic auth`() {
         mockMvc.get("/api/v1/info") {
             accept = MediaType.APPLICATION_JSON
         }.andExpect { status { isUnauthorized } }
     }
 
     @Test
-    @WithMockUser(username = "user", roles = ["USER"])
-    fun `access to common private controller with authorization`() {
+    fun `access to inMemory config by other config user `() {
         mockMvc.get("/api/v1/info") {
             accept = MediaType.APPLICATION_JSON
+            header("Authorization", "Basic " + Base64.getEncoder().encodeToString("ben:benspassword".toByteArray()))
+        }.andExpect { status { isUnauthorized } }
+    }
+
+    @Test
+    fun `access to inMemory config by inMemory config user `() {
+        mockMvc.get("/api/v1/info") {
+            accept = MediaType.APPLICATION_JSON
+            header("Authorization", "Basic " + Base64.getEncoder().encodeToString("user:user".toByteArray()))
         }.andExpect { status { isOk } }
     }
 
     @Test
-    @WithMockUser(username = "user", roles = ["USER"])
-    fun `access to admin private controller with role user`() {
+    fun `access to other config without basic auth`() {
         mockMvc.get("/api/v1/admin/info") {
             accept = MediaType.APPLICATION_JSON
-        }.andExpect { status { isForbidden } }
+        }.andExpect { status { isUnauthorized } }
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = ["ADMIN"])
-    fun `access to admin private controller with role admin`() {
+    fun `access to other config by other config user `() {
         mockMvc.get("/api/v1/admin/info") {
             accept = MediaType.APPLICATION_JSON
+            header("Authorization", "Basic " + Base64.getEncoder().encodeToString("ben:benspassword".toByteArray()))
         }.andExpect { status { isOk } }
     }
+
+    @Test
+    fun `access to other config by inMemory config user `() {
+        mockMvc.get("/api/v1/admin/info") {
+            accept = MediaType.APPLICATION_JSON
+            header("Authorization", "Basic " + Base64.getEncoder().encodeToString("user:user".toByteArray()))
+        }.andExpect { status { isUnauthorized } }
+    }
+
 }

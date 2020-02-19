@@ -1,6 +1,7 @@
 package by.dm13y.examples.security.config.custom
 
 import by.dm13y.example.securityexample.config.UserDetailInfo
+import org.springframework.context.annotation.Profile
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
