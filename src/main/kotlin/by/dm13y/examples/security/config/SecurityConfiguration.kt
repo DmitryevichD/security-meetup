@@ -31,8 +31,7 @@ class SecurityConfiguration(
             .antMatchers("/api/v1/public/**").permitAll() //ВАЖНО СОБЛЮДАТЬ ПОРЯДОК ОТ ЧАСТНОГО К ОБЩЕМУ
             .antMatchers("/api/**").authenticated()
             .and()
-            .httpBasic()
-
+            .formLogin()
     }
 
     @Bean
