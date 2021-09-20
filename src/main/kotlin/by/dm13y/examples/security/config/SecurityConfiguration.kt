@@ -1,6 +1,7 @@
 package by.dm13y.examples.security.config
 
 import by.dm13y.examples.security.config.jwt.JwtAuthenticationFilter
+import by.dm13y.examples.security.config.jwt.JwtTokenProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
@@ -15,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
+import org.springframework.security.web.util.matcher.RequestMatcher
 
 @Profile(value = ["auth2-test", "basic-test"])
 @Configuration
@@ -24,7 +27,7 @@ class SecurityConfiguration(
     private val userProperties: UserProperties,
     private val userCustomDetailServiceImpl: UserDetailsService,
     private val ldapUserMapper: LdapUserDetailsMapper,
-    private val jwtAuthenticationFilter: JwtAuthenticationFilter
+    private val jwtTokenProvider: JwtTokenProvider
 ) : WebSecurityConfigurerAdapter() {
     override fun configure(auth: AuthenticationManagerBuilder) {
 
@@ -53,9 +56,12 @@ class SecurityConfiguration(
     }
 
     override fun configure(http: HttpSecurity) {
+
+        val jwtAuthenticationFilter = JwtAuthenticationFilter(getOcrSecurityPathMatcher(), jwtTokenProvider)
+
         http.authorizeRequests()
             .antMatchers("/api/v1/public/**").permitAll() //ВАЖНО СОБЛЮДАТЬ ПОРЯДОК ОТ ЧАСТНОГО К ОБЩЕМУ
-            .antMatchers("/api/**").authenticated()
+            .requestMatchers(getOcrSecurityPathMatcher()).authenticated()
             .and()
             .httpBasic()
             .and()
@@ -82,5 +88,9 @@ class SecurityConfiguration(
                 return rawPassword.toString() == encodedPassword
             }
         }
+    }
+
+    private fun getOcrSecurityPathMatcher(): RequestMatcher {
+        return AntPathRequestMatcher("/api/**")
     }
 }
